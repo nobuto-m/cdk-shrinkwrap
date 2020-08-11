@@ -44,16 +44,10 @@ def build_deploy_script(script_filename, bundle, subordinates, applications_to_d
 
     # Commands for creating machines and waiting on them to be live..
     deploy.append("MACHINES=$(juju add-machine -n %d 2>&1|awk '{print $3}')" % machineCount)
+    deploy.append('MACHINE_LIST=($MACHINES)')
     deploy.append("set +x")
     deploy.append("until [[ %d -eq `juju machines | grep started | wc -l` ]]; do sleep 1; echo Waiting for machines to start...; done" % machineCount) # noqa
     deploy.append("set -x")
-
-    # Let's just install snap core on everything. TODO: don't do this on machines we don't need snaps on.
-    deploy.append('for machine in $MACHINES; do')
-    deploy.append('  juju scp %s $machine:' % (os.path.join('resources', 'core.snap')))
-    deploy.append('  juju run --machine $machine "sudo snap install --dangerous /home/ubuntu/core.snap"')
-    deploy.append('done')
-    deploy.append('MACHINE_LIST=($MACHINES)')
 
     if applications_to_deploy:
         # Commands for adding a unit to machines.
@@ -211,12 +205,6 @@ def main():
         app_to_deploy = {appname: app}
         build_deploy_script(script_filename, bundle, subordinates, app_to_deploy)
         print('    {}'.format(script_filename))
-
-    # Download the core snap.
-    print('Downloading the core snap...')
-    check_output('snap download core --channel=stable'.split(), stderr=STDOUT)
-    check_call('mv core*.snap %s' % os.path.join(root, 'resources', 'core.snap'), shell=True)
-    check_call('rm *.assert', shell=True)
 
     # Make the tarball.
     check_call(('tar -czf %s.tar.gz %s' % (root, root)), shell=True)
