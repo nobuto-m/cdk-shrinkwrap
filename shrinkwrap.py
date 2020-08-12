@@ -180,11 +180,12 @@ def main():
                         if 'channel' in app['Options']:
                             channel = app['Options']['channel']
 
+                elif charm == '~containers/etcd':
+                    snap = 'core18.snap'
+
                 # Path without .snap extension is currently a match for the name in the snap store. This may not always
                 # be the case.
                 snap = resource['Path'].replace('.snap', '')
-                if charm == '~containers/etcd':
-                    snap = 'core18'
 
                 # Download the snap and move it into position.
                 print('    Downloading resource %s from snap store...' % filename)
