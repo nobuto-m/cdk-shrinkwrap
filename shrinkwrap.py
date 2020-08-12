@@ -183,7 +183,7 @@ def main():
                 # Path without .snap extension is currently a match for the name in the snap store. This may not always
                 # be the case.
                 snap = resource['Path'].replace('.snap', '')
-                if charm == 'etcd':
+                if charm == '~containers/etcd':
                     snap = 'core18'
 
                 # Download the snap and move it into position.
