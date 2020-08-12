@@ -49,6 +49,7 @@ def build_deploy_script(script_filename, bundle, subordinates, applications_to_d
     deploy.append("set -x")
 
     # Let's just install snap core on everything. TODO: don't do this on machines we don't need snaps on.
+    # We still need this step even though charms support uploading the core snap as a resource due to LP: #1891259
     deploy.append('for machine in $MACHINES; do')
     deploy.append('  juju scp %s $machine:' % (os.path.join('resources', 'core.snap')))
     deploy.append('  juju run --machine $machine "sudo snap install --dangerous /home/ubuntu/core.snap"')
