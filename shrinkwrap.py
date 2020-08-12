@@ -184,7 +184,7 @@ def main():
                 # be the case.
                 snap = resource['Path'].replace('.snap', '')
                 if charm == '~containers/etcd' and snap == 'core':
-                    snap = 'core18
+                    snap = 'core18'
 
                 # Download the snap and move it into position.
                 print('    Downloading resource %s from snap store...' % filename)
