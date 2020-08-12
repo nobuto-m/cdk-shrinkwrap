@@ -126,7 +126,8 @@ def main():
 
         # Download the charm and unzip it.
         print('    Downloading %s...' % id)
-        check_call(('wget --quiet https://api.jujucharms.com/charmstore/v5/%s/archive -O /tmp/archive.zip' % id).split())
+        check_call(('wget --quiet https://api.jujucharms.com/charmstore/v5/%s/archive -O /tmp/archive.zip'
+                    % id).split())
         check_call(('unzip -qq /tmp/archive.zip -d %s/charms/%s' % (root, appname)).split())
         check_call('rm /tmp/archive.zip'.split())
 
@@ -173,7 +174,7 @@ def main():
                             if 'channel' in config['options']:
                                 # Might need to check if this is nonsensical
                                 channel = config['options']['channel']['default']
-                                
+
                     # Check if there's a channel override in the bundle
                     if 'Options' in app:
                         if 'channel' in app['Options']:
@@ -182,6 +183,8 @@ def main():
                 # Path without .snap extension is currently a match for the name in the snap store. This may not always
                 # be the case.
                 snap = resource['Path'].replace('.snap', '')
+                if charm == 'etcd':
+                    snap = 'core18'
 
                 # Download the snap and move it into position.
                 print('    Downloading resource %s from snap store...' % filename)
